@@ -17,10 +17,11 @@ namespace API.Models.Services
             _context = context;
         }
 
-        public async Task CreateCartItem(CartItems cartItems)
+        public async Task<CartItems> CreateCartItem(CartItems cartItems)
         {
             _context.CartItems.Add(cartItems);
             await _context.SaveChangesAsync();
+            return cartItems;
         }
 
         public async Task DeleteCartItem(int ID)

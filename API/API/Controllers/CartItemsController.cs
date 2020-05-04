@@ -7,32 +7,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Data;
 using API.Models;
+using API.Models.Interface;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Cart")]
     [ApiController]
     public class CartItemsController : ControllerBase
     {
-        private readonly StoreDbContext _context;
+        private readonly ICartItemsManager _cartManager;
 
-        public CartItemsController(StoreDbContext context)
+        public CartItemsController(ICartItemsManager cartManager)
         {
-            _context = context;
+            _cartManager = cartManager;
         }
 
-        // GET: api/CartItems
+        // GET: api/Cart
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartItems>>> GetCartItems()
-        {
-            return await _context.CartItems.ToListAsync();
-        }
+        public async Task<ActionResult<IEnumerable<CartItems>>> GetCartItems() => await _cartManager.GetAllTheCart();
 
-        // GET: api/CartItems/5
+        // GET: api/Cart/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CartItems>> GetCartItems(int id)
         {
-            var cartItems = await _context.CartItems.FindAsync(id);
+            var cartItems = await _cartManager.GetCartItemsByID(id);
 
             if (cartItems == null)
             {
@@ -42,7 +40,7 @@ namespace API.Controllers
             return cartItems;
         }
 
-        // PUT: api/CartItems/5
+        // PUT: api/Cart/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
@@ -53,15 +51,13 @@ namespace API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(cartItems).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _cartManager.UpdateCartItem(cartItems);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CartItemsExists(id))
+                if (await _cartManager.GetCartItemsByID(id) == null)
                 {
                     return NotFound();
                 }
@@ -74,37 +70,20 @@ namespace API.Controllers
             return NoContent();
         }
 
-        // POST: api/CartItems
+        // POST: api/Cart
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<CartItems>> PostCartItems(CartItems cartItems)
         {
-            _context.CartItems.Add(cartItems);
-            await _context.SaveChangesAsync();
+            CartItems cart = await _cartManager.CreateCartItem(cartItems);
 
-            return CreatedAtAction("GetCartItems", new { id = cartItems.ID }, cartItems);
+            return CreatedAtAction("GetCartItems", new { id = cart.ID }, cart);
         }
 
-        // DELETE: api/CartItems/5
+        // DELETE: api/Cart/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CartItems>> DeleteCartItems(int id)
-        {
-            var cartItems = await _context.CartItems.FindAsync(id);
-            if (cartItems == null)
-            {
-                return NotFound();
-            }
+        public async Task DeleteCartItems(int id) => await _cartManager.DeleteCartItem(id);
 
-            _context.CartItems.Remove(cartItems);
-            await _context.SaveChangesAsync();
-
-            return cartItems;
-        }
-
-        private bool CartItemsExists(int id)
-        {
-            return _context.CartItems.Any(e => e.ID == id);
-        }
     }
 }

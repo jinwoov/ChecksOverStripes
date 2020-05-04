@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.Models.Interface;
+using API.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +39,11 @@ namespace API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             }
             );
+
+            services.AddTransient<ICartItemsManager, CartItemService>();
+            services.AddTransient<InventoryManager, InventoryService>();
+            services.AddTransient<IUserManager, UserService>();
+
         }
 
 

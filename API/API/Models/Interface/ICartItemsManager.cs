@@ -8,7 +8,7 @@ namespace API.Models.Interface
     public interface ICartItemsManager
     {
         //C
-        Task CreateCartItem(CartItems cartItems);
+        Task<CartItems> CreateCartItem(CartItems cartItems);
 
         //R
         Task<CartItems> GetCartItemsByID(int ID);
