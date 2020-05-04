@@ -9,7 +9,7 @@ namespace API.Models.Interface
     public interface InventoryManager
     {
         //C
-        Task CreateShoes(InventoryDTO inventory);
+        Task<InventoryDTO> CreateShoes(InventoryDTO inventory);
 
         //R
         Task<InventoryDTO> GetInventoryByID(int ID);
@@ -18,7 +18,7 @@ namespace API.Models.Interface
         Task<List<InventoryDTO>> GetAllTheShoes();
 
         //U
-        Task UpdateInventory(InventoryDTO inventory);
+        Task<InventoryDTO> UpdateInventory(InventoryDTO inventory);
 
         //U
         Task DeleteInventory(int ID);

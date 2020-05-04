@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Data;
 using API.Models;
+using API.Models.Interface;
+using API.Models.DTOs;
 
 namespace API.Controllers
 {
@@ -14,25 +16,22 @@ namespace API.Controllers
     [ApiController]
     public class InventoriesController : ControllerBase
     {
-        private readonly StoreDbContext _context;
+        private readonly InventoryManager _inventoryManager;
 
-        public InventoriesController(StoreDbContext context)
+        public InventoriesController(InventoryManager inventoryManager)
         {
-            _context = context;
+            _inventoryManager = inventoryManager;
         }
 
         // GET: api/Inventories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Inventory>>> GetInventory()
-        {
-            return await _context.Inventory.ToListAsync();
-        }
+        public async Task<ActionResult<IEnumerable<InventoryDTO>>> GetInventory() => await _inventoryManager.GetAllTheShoes();
 
         // GET: api/Inventories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Inventory>> GetInventory(int id)
+        public async Task<ActionResult<InventoryDTO>> GetInventory(int id)
         {
-            var inventory = await _context.Inventory.FindAsync(id);
+            var inventory = await _inventoryManager.GetInventoryByID(id);
 
             if (inventory == null)
             {
@@ -46,31 +45,24 @@ namespace API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInventory(int id, Inventory inventory)
+        public async Task<IActionResult> PutInventory(int id, InventoryDTO inventory)
         {
             if (id != inventory.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(inventory).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _inventoryManager.UpdateInventory(inventory);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!InventoryExists(id))
+                if (_inventoryManager.GetInventoryByID(id) == null)
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -78,33 +70,27 @@ namespace API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Inventory>> PostInventory(Inventory inventory)
+        public async Task<ActionResult<Inventory>> PostInventory(InventoryDTO inventory)
         {
-            _context.Inventory.Add(inventory);
-            await _context.SaveChangesAsync();
+            var product = await _inventoryManager.CreateShoes(inventory);
 
-            return CreatedAtAction("GetInventory", new { id = inventory.ID }, inventory);
+            return CreatedAtAction("GetInventory", new { id = product.ID }, product);
         }
 
         // DELETE: api/Inventories/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Inventory>> DeleteInventory(int id)
+        public async Task<ActionResult<InventoryDTO>> DeleteInventory(int id)
         {
-            var inventory = await _context.Inventory.FindAsync(id);
+            var inventory = await _inventoryManager.GetInventoryByID(id);
             if (inventory == null)
             {
                 return NotFound();
             }
 
-            _context.Inventory.Remove(inventory);
-            await _context.SaveChangesAsync();
+            await _inventoryManager.DeleteInventory(id);
 
             return inventory;
         }
 
-        private bool InventoryExists(int id)
-        {
-            return _context.Inventory.Any(e => e.ID == id);
-        }
     }
 }

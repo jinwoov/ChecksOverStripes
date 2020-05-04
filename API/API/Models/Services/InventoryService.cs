@@ -17,7 +17,7 @@ namespace API.Models.Services
         {
             _context = context;
         }
-        public async Task CreateShoes(InventoryDTO inventory)
+        public async Task<InventoryDTO> CreateShoes(InventoryDTO inventory)
         {
             Inventory invent = new Inventory()
             {
@@ -29,6 +29,8 @@ namespace API.Models.Services
 
             _context.Inventory.Add(invent);
             await _context.SaveChangesAsync();
+
+            return inventory;
         }
 
         public async Task DeleteInventory(int ID)
@@ -58,7 +60,7 @@ namespace API.Models.Services
             return pDTO;
         }
 
-        public async Task UpdateInventory(InventoryDTO inventory)
+        public async Task<InventoryDTO> UpdateInventory(InventoryDTO inventory)
         {
             Inventory invent = new Inventory()
             {
@@ -69,6 +71,8 @@ namespace API.Models.Services
             };
             _context.Inventory.Update(invent);
             await _context.SaveChangesAsync();
+
+            return inventory;
         }
 
         private InventoryDTO ConvertToDTO(Inventory inventory)
