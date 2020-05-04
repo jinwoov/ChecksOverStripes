@@ -11,18 +11,18 @@ namespace API.Models.Services
     public class UserService : IUserManager
     {
         private readonly StoreDbContext _context;
-        private readonly ICartItemsManager _cManager;
 
-        public UserService(StoreDbContext context, ICartItemsManager cManager)
+        public UserService(StoreDbContext context)
         {
             _context = context;
-            _cManager = cManager;
         }
 
         public async Task CreateUser(string email)
         {
-            User user = new User();
-            user.Email = email;
+            User user = new User()
+            {
+                Email = email
+            };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
