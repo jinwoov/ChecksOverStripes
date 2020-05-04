@@ -3,14 +3,16 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200504065146_seededData")]
+    partial class seededData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,22 +43,6 @@ namespace API.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("CartItems");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            InventoryID = 3,
-                            Qty = 2,
-                            UserID = 1
-                        },
-                        new
-                        {
-                            ID = 2,
-                            InventoryID = 2,
-                            Qty = 5,
-                            UserID = 2
-                        });
                 });
 
             modelBuilder.Entity("API.Models.Inventory", b =>
@@ -122,18 +108,6 @@ namespace API.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Email = "areyes986@gmail.com"
-                        },
-                        new
-                        {
-                            ID = 2,
-                            Email = "jinwoov@gmail.com"
-                        });
                 });
 
             modelBuilder.Entity("API.Models.CartItems", b =>

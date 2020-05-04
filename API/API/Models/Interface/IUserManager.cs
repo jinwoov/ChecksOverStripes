@@ -7,8 +7,8 @@ namespace API.Models.Interface
 {
     public interface IUserManager
     {
-        Task CreateUser(string email);
-        Task<User> GetUser(string email);
+        Task<User> CreateUser(User email);
+        Task<User> GetUser(int id);
         Task DeleteUser(int id);
         Task<List<CartItems>> GetCartItems(string email);
     }
