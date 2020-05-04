@@ -58,9 +58,17 @@ namespace API.Models.Services
             return pDTO;
         }
 
-        public Task UpdateInventory(InventoryDTO inventory)
+        public async Task UpdateInventory(InventoryDTO inventory)
         {
-            throw new NotImplementedException();
+            Inventory invent = new Inventory()
+            {
+                Brand = Enum.Parse<Brand>(inventory.Brand),
+                Name = inventory.Name,
+                Description = inventory.Description,
+                Size = inventory.Size
+            };
+            _context.Inventory.Update(invent);
+            await _context.SaveChangesAsync();
         }
 
         private InventoryDTO ConvertToDTO(Inventory inventory)
