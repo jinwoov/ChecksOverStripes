@@ -1,2 +1,7 @@
-﻿body {
+﻿$themcolor: #2D7A8A;
+
+body {
+    h1{
+        background-color: $themcolor;
+    }
 }

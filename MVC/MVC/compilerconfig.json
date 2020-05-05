@@ -2,5 +2,9 @@
   {
     "outputFile": "wwwroot/styles/StyleSheet.css",
     "inputFile": "wwwroot/styles/StyleSheet.scss"
+  },
+  {
+    "outputFile": "wwwroot/styles/base.css",
+    "inputFile": "wwwroot/styles/base.scss"
   }
 ]
