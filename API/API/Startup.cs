@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -33,6 +34,11 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Checks Over Stripes", Description = "Need to sell my Nike Shoes" });
+            });
 
             services.AddDbContext<StoreDbContext>(options =>
             {
@@ -57,8 +63,14 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseSwagger();
 
             app.UseAuthorization();
+
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Checks Over Stripes v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

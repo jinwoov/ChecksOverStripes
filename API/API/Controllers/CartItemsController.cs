@@ -73,12 +73,19 @@ namespace API.Controllers
         // POST: api/Cart
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<CartItems>> PostCartItems(CartItems cartItems)
+        [HttpPost, Route("{userID}/{inventoryID}/{quantity}")]
+        public async Task<ActionResult<CartItems>> PostCartItems(int inventoryID, int userID, int quantity)
         {
-            CartItems cart = await _cartManager.CreateCartItem(cartItems);
+            CartItems cart = new CartItems
+            {
+                InventoryID = inventoryID,
+                UserID = userID,
+                Qty = quantity
+            };
 
-            return CreatedAtAction("GetCartItems", new { id = cart.ID }, cart);
+            CartItems createCart = await _cartManager.CreateCartItem(cart);
+
+            return CreatedAtAction("GetCartItems", new { id = createCart.ID }, createCart);
         }
 
         // DELETE: api/Cart/5

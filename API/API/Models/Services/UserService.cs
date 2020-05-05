@@ -17,15 +17,11 @@ namespace API.Models.Services
             _context = context;
         }
 
-        public async Task CreateUser(string email)
+        public async Task<User> CreateUser(User user)
         {
-            User user = new User()
-            {
-                Email = email
-            };
-
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task DeleteUser(int id)
@@ -45,10 +41,9 @@ namespace API.Models.Services
             return cartList;
         }
 
-        public async Task<User> GetUser(string email)
+        public async Task<User> GetUser(int id)
         {
-            var user = await _context.Users.Where(x => x.Email == email).SingleOrDefaultAsync();
-
+            User user = await _context.Users.FindAsync(id);
             return user;
         }
     }

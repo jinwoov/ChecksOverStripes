@@ -14,11 +14,11 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InventoriesController : ControllerBase
+    public class InventoryController : ControllerBase
     {
         private readonly InventoryManager _inventoryManager;
 
-        public InventoriesController(InventoryManager inventoryManager)
+        public InventoryController(InventoryManager inventoryManager)
         {
             _inventoryManager = inventoryManager;
         }
