@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MVC.Data;
+using MVC.Models.Interface;
+using MVC.Models.Services;
 
 namespace MVC
 {
@@ -55,6 +57,8 @@ namespace MVC
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = false;
             });
+
+            services.AddTransient<InventoryManager, InventoryService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

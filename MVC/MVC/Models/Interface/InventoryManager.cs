@@ -7,6 +7,6 @@ namespace MVC.Models.Interface
 {
     public interface InventoryManager
     {
-        Task<Inventory> GetInventories();
+        Task<IEnumerable<Inventory>> GetInventories();
     }
 }

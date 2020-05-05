@@ -6,3 +6,11 @@
 
 <!DOCTYPE html>
 <h1>hello world</h1>
+
+	@foreach (var item in Model.ProductList)
+	{
+		 <h3>@item.Name</h3>
+		 <p>@item.Description</p>
+		 <p>@item.Brand</p>
+		 <p>@item.Size</p>
+	}
